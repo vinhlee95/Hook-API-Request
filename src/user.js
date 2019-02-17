@@ -1,24 +1,33 @@
-import React, { useState, useEffect } from 'react';
+// Using useReducer hook
+
+import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 const API = 'https://api.randomuser.me/';
 
 function User() {
-	const [user, setUser] = useState(null);
-
-	async function getUser() {
-		const response = await axios.get(API);
-		const user = response.data.results[0];
-		return user;
-	}
+	const [userState, setUserState] = useReducer(
+		(state, newState) => ({ ...state, ...newState }),
+		{ user: null, loading: true }
+	);
 
 	useEffect(() => {
-		getUser().then(user => setUser(user));
+		axios.get(API).then(res => {
+			setUserState({
+				user: res.data.results[0],
+				loading: false
+			});
+		});
 	}, []);
+
+	const { loading, user } = userState;
+	if (loading) {
+		return <div>...Loading</div>;
+	}
 
 	return (
 		<div>
 			<h2>User</h2>
-			{user ? user.name.first : null}
+			<p>{user.name.first}</p>
 		</div>
 	);
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import User from './user';
-
+import User from './User';
 
 function App() {
 	return (
